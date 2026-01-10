@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model adoption_applications {
+  id         String   @id
+  poppy_id   String
+  full_name  String
+  email      String
+  phone      String
+  address    String
+  experience String
+  reason     String
+  status     String   @default("pending")
+  created_at DateTime @default(now())
+  poppies    poppies  @relation(fields: [poppy_id], references: [id], onDelete: Cascade)
+}
+
+model contact_inquiries {
+  id         String   @id
+  name       String
+  email      String
+  subject    String
+  message    String
+  created_at DateTime @default(now())
+}
+
+model poppies {
+  id                    String                  @id
+  name                  String
+  age                   Int
+  size                  String
+  personality           String[]
+  description           String
+  image_url             String
+  gallery_images        String[]
+  color                 String
+  status                String                  @default("available")
+  created_at            DateTime                @default(now())
+  updated_at            DateTime
+  adoption_applications adoption_applications[]
+}
+
+model testimonials {
+  id          String   @id
+  author_name String
+  location    String
+  message     String
+  image       String
+  featured    Boolean  @default(false)
+  created_at  DateTime @default(now())
+}
+
+model UserUsage {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  usageCount Int      @default(0)
+  maxUsage   Int      @default(5)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Suggestion {
+  id         String   @id @default(cuid())
+  suggestion String
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+}

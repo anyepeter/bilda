@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Roboto } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import { Analytics } from "@vercel/analytics/next"
+import SuggestionButton from '@/components/SuggestionButton'
 import './globals.css'
 
 const roboto = Roboto({
@@ -33,6 +34,7 @@ export default function RootLayout({
         <body className={roboto.className}>
           <Analytics />
           {children}
+          <SuggestionButton />
         </body>
       </html>
     </ClerkProvider>

@@ -102,6 +102,14 @@ export default function Navbar() {
               </SignedOut>
               <SignedIn>
                 <div className="flex items-center gap-3">
+                  {!isPromptPage && (
+                    <Button size="md" asChild className='bg-[#1C4D8D] hover:bg-[#0F2854]'>
+                      <a href="/prompt">
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        Generate Prompt
+                      </a>
+                    </Button>
+                  )}
                   <span className="text-dark text-bold font-medium">
                    Hello {user?.firstName || user?.fullName || 'User'}
                   </span>
@@ -185,6 +193,14 @@ export default function Navbar() {
                   </SignedOut>
                   <SignedIn>
                     <div className="flex flex-col items-center justify-center gap-3">
+                      {!isPromptPage && (
+                        <a href="/prompt" className="block w-full mb-4">
+                          <Button size="lg" className="w-full bg-[#1C4D8D] hover:bg-[#0F2854]">
+                            <Sparkles className="w-5 h-5 mr-2" />
+                            Generate Prompt
+                          </Button>
+                        </a>
+                      )}
                       <span className="text-dark font-semibold text-lg">
                       Hello {user?.firstName || user?.fullName || 'User'}
                       </span>
