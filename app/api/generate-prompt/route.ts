@@ -15,6 +15,8 @@ interface PromptSection {
   order: number
 }
 
+export const maxDuration = 60
+
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
@@ -192,15 +194,14 @@ The prompt should be actionable and ready for an AI coding assistant to implemen
 
     promptSections.push(landingPagePrompt)
 
-    // Prompts 3-N: Individual Feature Prompts (each builds on previous work)
+    // Prompts 3-N: Individual Feature Prompts (run in parallel since they're independent)
     if (features && features.length > 0) {
-      for (let i = 0; i < features.length; i++) {
-        const feature = features[i]
+      const featurePromises = features.map((feature: string, i: number) => {
         const previousPromptContext = i === 0
           ? `Previous work: Landing page with navbar and footer is already built.`
           : `Previous work: Landing page and ${i} feature(s) already implemented.`
 
-        const featurePrompt = await generatePrompt({
+        return generatePrompt({
           title: `Feature: ${feature}`,
           context: `Generate a comprehensive implementation prompt for adding the "${feature}" feature to our ${appType} for ${domain}.
 
@@ -237,9 +238,10 @@ Create a comprehensive prompt that the AI assistant will use to IMPLEMENT this f
 The prompt should be actionable and build upon the existing codebase. Ensure it integrates smoothly with the already-built components.`,
           order: 3 + i
         })
+      })
 
-        promptSections.push(featurePrompt)
-      }
+      const featureResults = await Promise.all(featurePromises)
+      promptSections.push(...featureResults)
     }
 
     // Sort by order
